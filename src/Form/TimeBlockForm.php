@@ -23,6 +23,8 @@ class TimeBlockForm extends FormBase {
   /**
    * TimeBlockForm constructor.
    * @param \Geocoder\Provider\GoogleMaps $geocoder
+   * @param \Drupal\timeblock\Services\GoogleTimezoneService $googletimezone
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    */
   public function __construct(GoogleMaps $geocoder, GoogleTimezoneService $googletimezone, DateFormatterInterface $date_formatter) {
     $this->geocoder = $geocoder;

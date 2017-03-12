@@ -15,7 +15,7 @@ class GoogleTimezoneService extends GoogleMapsTimeZone {
   }
 
   /**
-   * @return static
+   * @return \DateTime
    * @throws \Exception
    */
   public function getDateTime() {
