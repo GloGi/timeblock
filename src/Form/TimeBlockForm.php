@@ -60,9 +60,8 @@ class TimeBlockForm extends FormBase {
     $form_state->set('api_key', $api_key);
     $local_time = new \DateTime('now');
 
-    $form['static_time'] = [
+    $form['local_time'] = [
       '#type' => 'container',
-      '#title' => $this->t('Current time'),
       '#theme' => 'timeblock_data',
       '#timedata' => $this->buildTimeDataArray($local_time),
     ];
