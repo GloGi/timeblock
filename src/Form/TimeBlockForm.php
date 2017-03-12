@@ -6,8 +6,6 @@ use Exception;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\timeblock\Services\GoogleTimezoneService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Geocoder\Provider\GoogleMaps;
@@ -55,7 +53,6 @@ class TimeBlockForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $api_key = NULL, $default_address = 'Helsinki') {
     $form = [];
-
     // Save api_key to form_state for later use.
     $form_state->set('api_key', $api_key);
     $local_time = new \DateTime('now');
