@@ -1,5 +1,4 @@
 <?php
-
 namespace Drupal\timeblock\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
@@ -53,7 +52,6 @@ class TimeBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $api_key = $this->configuration['google_timezone_api_key'];
     $default_address = $this->configuration['default_address'];
     $error_message = [];
-
 
     if (empty($api_key)) {
       $error_message[] = $this->t('Google API key not found for timeblock.');
