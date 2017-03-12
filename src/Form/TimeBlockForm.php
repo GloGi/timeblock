@@ -100,7 +100,7 @@ class TimeBlockForm extends FormBase {
   /**
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @return \Drupal\Core\Ajax\AjaxResponse
+   * @return mixed
    */
   public function getTimeCallback(array $form, FormStateInterface $form_state) {
     return $form['time_wrapper'];
