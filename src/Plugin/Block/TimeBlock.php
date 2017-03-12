@@ -48,14 +48,28 @@ class TimeBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     $build = [];
-
     // Disable caching for this block.
     $build['#cache']['max-age'] = 0;
-    $api_key = $this->configuration['time_block_google_api'];
+    $api_key = $this->configuration['google_timezone_api_key'];
+    $default_address = $this->configuration['default_address'];
+    $error_message = [];
+
+
     if (empty($api_key)) {
-      $build['time_block'] = $this->t('Google API key not found.');
+      $error_message[] = $this->t('Google API key not found for timeblock.');
     }
-    $build['time_block'][] = $this->form_builder->getForm('Drupal\timeblock\Form\TimeBlockForm', $api_key, 'San Fransisco');
+    if (empty($default_address)) {
+      $error_message[] = $this->t('Default address not placed for timeblock');
+    }
+
+    if (!empty($error_message)) {
+      foreach ($error_message as $message) {
+        drupal_set_message($message);
+      }
+      return $build;
+    }
+
+    $build['time_block'] = $this->form_builder->getForm('Drupal\timeblock\Form\TimeBlockForm', $api_key, $default_address);
     return $build;
   }
 
@@ -66,10 +80,18 @@ class TimeBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
-    $form['time_block_google_api'] = [
+    $form['google_timezone_api_key'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Google API key'),
-      '#default_value' => $this->configuration['time_block_google_api'],
+      '#title' => $this->t('Google Timezone API key'),
+      '#default_value' => $this->configuration['google_timezone_api_key'],
+      '#required' => TRUE,
+    ];
+    $form['default_address'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default address'),
+      '#description' => $this->t('Default address for time search block'),
+      '#default_value' => $this->configuration['default_address'],
+      '#required' => TRUE,
     ];
     return $form;
   }
@@ -80,6 +102,7 @@ class TimeBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
-    $this->configuration['time_block_google_api'] = $form_state->getValue('time_block_google_api');
+    $this->configuration['google_timezone_api_key'] = $form_state->getValue('google_timezone_api_key');
+    $this->configuration['default_address'] = $form_state->getValue('default_address');
   }
 }
