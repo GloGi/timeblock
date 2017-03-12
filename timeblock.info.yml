@@ -1,0 +1,5 @@
+name: timeblock
+type: module
+description: Provides time display from different timezones
+core: 8.x
+package: Custom

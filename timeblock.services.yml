@@ -1,0 +1,10 @@
+services:
+  timeblock.guzzlehttp6adapter:
+    class: Ivory\HttpAdapter\Guzzle6HttpAdapter
+  timeblock.googlemaps:
+    class: Geocoder\Provider\GoogleMaps
+    arguments: ['@timeblock.guzzlehttp6adapter']
+  timeblock.googletimezone:
+    class: GoogleMapsTimeZone
+  timeblock.googletimezoneservice:
+    class: Drupal\timeblock\Services\GoogleTimezoneService

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Contains timeblock.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function timeblock_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the timeblock module.
+    case 'help.page.timeblock':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides time display from different timezones') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function timeblock_theme() {
+  return [
+    'timeblock' => [
+      'template' => 'timeblock',
+      'render element' => 'children',
+    ],
+    'timeblock_data' => [
+      'template' => 'timeblock-data',
+      'path' => drupal_get_path('module', 'timeblock') . '/templates',
+      'variables' => [
+        'datetime' => NULL,
+        'timedata' => [
+          'date' => NULL,
+          'timezone' => NULL,
+          'address' => NULL,
+        ],
+      ],
+    ],
+  ];
+}

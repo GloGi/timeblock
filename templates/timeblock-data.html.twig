@@ -1,0 +1,11 @@
+{%  if timedata.date is not empty %}
+  <time datetime="{{ timedate.dateiso }}">{{ timedata.date }}</time>
+{% else %}
+  <div class="no-time">{{ "No time available"|t }}</div>
+{% endif %}
+{% if timedata.timezone is not empty %}
+  <div class="timezone">{{ timedata.timezone }}</div>
+{% endif %}
+{% if timedata.address is not empty %}
+  <div class="address">{{ timedata.address }}</div>
+{% endif %}
