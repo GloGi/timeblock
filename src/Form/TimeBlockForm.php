@@ -2,11 +2,10 @@
 
 namespace Drupal\timeblock\Form;
 
-use Exception;
+use Drupal\timeblock\GoogleTimezonePlus;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\timeblock\Services\GoogleTimezoneService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Geocoder\Provider\GoogleMaps;
 
@@ -17,18 +16,16 @@ use Geocoder\Provider\GoogleMaps;
  */
 class TimeBlockForm extends FormBase {
   protected $geocoder;
-  protected $googleTimezone;
   protected $dateFormatter;
 
   /**
    * TimeBlockForm constructor.
    * @param \Geocoder\Provider\GoogleMaps $geocoder
-   * @param \Drupal\timeblock\Services\GoogleTimezoneService $googletimezone
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @internal param \Drupal\timeblock\Services\GoogleTimezoneService $googletimezone
    */
-  public function __construct(GoogleMaps $geocoder, GoogleTimezoneService $googletimezone, DateFormatterInterface $date_formatter) {
+  public function __construct(GoogleMaps $geocoder, DateFormatterInterface $date_formatter) {
     $this->geocoder = $geocoder;
-    $this->googleTimezone = $googletimezone;
     $this->dateFormatter = $date_formatter;
   }
 
@@ -38,7 +35,6 @@ class TimeBlockForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('timeblock.googlemaps'),
-      $container->get('timeblock.googletimezoneservice'),
       $container->get('date.formatter')
     );
   }
@@ -88,8 +84,14 @@ class TimeBlockForm extends FormBase {
       '#type' => 'container',
       '#attributes' => ['id' => 'time-container'],
       '#theme' => 'timeblock_data',
-      '#timedata' => $this->buildTimeDataArray($datetime, $address),
+      '#timedata' => [],
     ];
+
+    if (!$datetime) {
+      return $form;
+    }
+
+    $form['time_wrapper']['#timedata'] = $this->buildTimeDataArray($datetime, $address);
 
     $form['#attributes'] = array('onsubmit' => 'return false');
 
@@ -131,25 +133,25 @@ class TimeBlockForm extends FormBase {
    * @throws \Exception
    */
   public function getLocationTime($address, $api_key) {
-    $addresses = $this->geocoder->geocode($address);
-
-    if ($addresses->count() == 0) {
+    try {
+      $addresses = $this->geocoder->geocode($address);
+    }
+    catch (\Exception $e) {
       return NULL;
     }
 
     $address = $addresses->first();
-    $this->googleTimezone->setApiKey($api_key);
-    $this->googleTimezone->setLatitude($address->getLatitude());
-    $this->googleTimezone->setLongitude($address->getLongitude());
+    $google_timezone = new GoogleTimezonePlus($address->getLatitude(), $address->getLongitude());
+    $google_timezone->setApiKey($api_key);
 
     try {
-      $this->googleTimezone->queryTimeZone();
+      $google_timezone->queryTimeZone();
     }
-    catch (Exception $e) {
-      throw new Exception($e->getMessage());
+    catch (\Exception $e) {
+      throw new \Exception($e->getMessage());
     }
 
-    return $this->googleTimezone->getDateTime();
+    return $google_timezone->getDateTime();
   }
 
   /**

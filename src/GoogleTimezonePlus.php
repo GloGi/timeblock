@@ -1,11 +1,10 @@
 <?php
 
-namespace Drupal\timeblock\Services;
+namespace Drupal\timeblock;
 
-use Exception;
 use GoogleMapsTimeZone;
 
-class GoogleTimezoneService extends GoogleMapsTimeZone {
+class GoogleTimezonePlus extends GoogleMapsTimeZone {
   protected $response;
   protected $drupalDateTime;
 
@@ -22,7 +21,7 @@ class GoogleTimezoneService extends GoogleMapsTimeZone {
     // This method is meant for after api has been queried return FALSE is no response is available.
     $response = $this->getResponse();
     if (empty($response)) {
-      throw new Exception('No response available');
+      throw new \Exception('No response available');
     }
 
     $datetime = $this->getDefaultDateTime();

@@ -4,5 +4,3 @@ services:
   timeblock.googlemaps:
     class: Geocoder\Provider\GoogleMaps
     arguments: ['@timeblock.guzzlehttp6adapter']
-  timeblock.googletimezoneservice:
-    class: Drupal\timeblock\Services\GoogleTimezoneService
