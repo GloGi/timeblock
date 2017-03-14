@@ -61,8 +61,7 @@ class TimeBlockForm extends FormBase {
       '#timedata' => $this->buildTimeDataArray($local_time),
     ];
 
-    $address = $form_state->getValue('address');
-    $address = empty($address) ? $default_address : $address;
+    $address = $form_state->getValue('address', $default_address);
 
     $form['address'] = [
       '#type' => 'textfield',
